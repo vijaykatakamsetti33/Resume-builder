@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Builder — Vault of Codes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <span class="topbar__mark">Rb</span>
+    <div class="topbar__title">
+      <span class="eyebrow">Resume Builder </span>
+      <h1>Resume&nbsp;Builder</h1>
+    </div>
+  </div>
+
+  <div class="topbar__right">
+    <div class="theme-switcher" role="group" aria-label="Choose accent theme">
+      <button type="button" class="theme-dot theme-dot--brass is-active" data-theme="brass" aria-label="Brass theme"></button>
+      <button type="button" class="theme-dot theme-dot--sage" data-theme="sage" aria-label="Sage theme"></button>
+      <button type="button" class="theme-dot theme-dot--slate" data-theme="slate" aria-label="Slate theme"></button>
+    </div>
+
+    <div class="topbar__progress" aria-label="Form completion">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span class="progress-label"><span id="progressPercent">0</span>% drafted</span>
+    </div>
+
+    <span class="save-indicator" id="saveIndicator">All changes saved</span>
+  </div>
+</header>
+
+<main class="workspace">
+
+  <!-- ============ FORM / DESK SIDE ============ -->
+  <section class="desk" aria-label="Resume input form">
+
+    <form id="resumeForm" autocomplete="off">
+
+      <fieldset class="card">
+        <legend><span class="tag-no">01</span> Personal Details</legend>
+
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input type="text" id="fullName" placeholder="Ada Lovelace">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="ada@example.com">
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="+91 98765 43210">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="location">Location <span class="optional">(optional)</span></label>
+          <input type="text" id="location" placeholder="Hyderabad, India">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="linkedin">LinkedIn <span class="optional">(optional)</span></label>
+            <input type="text" id="linkedin" placeholder="linkedin.com/in/ada">
+          </div>
+          <div class="field">
+            <label for="github">GitHub <span class="optional">(optional)</span></label>
+            <input type="text" id="github" placeholder="github.com/ada">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="portfolio">Portfolio site <span class="optional">(optional)</span></label>
+          <input type="text" id="portfolio" placeholder="ada.dev">
+        </div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><span class="tag-no">02</span> Profile Summary</legend>
+        <div class="field">
+          <label for="summary">A short pitch about you</label>
+          <textarea id="summary" rows="4" placeholder="Front-end developer who enjoys turning tricky interactions into clean, fast interfaces..."></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><span class="tag-no">03</span> Education</legend>
+        <div id="educationList" class="repeat-list"></div>
+        <button type="button" class="btn-add" id="addEducation">+ Add education</button>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><span class="tag-no">04</span> Skills</legend>
+        <div class="field">
+          <label for="skillInput">Type a skill and press Enter</label>
+          <input type="text" id="skillInput" placeholder="e.g. JavaScript">
+        </div>
+        <div class="chip-list" id="skillChips"></div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><span class="tag-no">05</span> Experience</legend>
+        <div id="experienceList" class="repeat-list"></div>
+        <button type="button" class="btn-add" id="addExperience">+ Add experience</button>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><span class="tag-no">06</span> Projects</legend>
+        <div id="projectList" class="repeat-list"></div>
+        <button type="button" class="btn-add" id="addProject">+ Add project</button>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><span class="tag-no">07</span> Certifications</legend>
+        <div id="certList" class="repeat-list"></div>
+        <button type="button" class="btn-add" id="addCertification">+ Add certification</button>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="btn-primary" id="downloadPdf">Download as PDF</button>
+        <button type="button" class="btn-ghost" id="clearForm">Clear form</button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- ============ PREVIEW / PAPER SIDE ============ -->
+  <section class="stage" aria-label="Resume preview">
+    <div class="paper" id="paper">
+      <div class="paper__perforation" aria-hidden="true"></div>
+
+      <div class="paper__inner">
+        <header class="resume-head">
+          <h2 id="prevName">Your Name</h2>
+          <p class="resume-role" id="prevSummaryLine">Your headline will appear here</p>
+          <div class="resume-contact" id="prevContact"></div>
+          <div class="resume-links" id="prevLinks"></div>
+        </header>
+
+        <section class="resume-section" id="secSummary" hidden>
+          <h3>Profile</h3>
+          <p id="prevSummary"></p>
+        </section>
+
+        <section class="resume-section" id="secEducation" hidden>
+          <h3>Education</h3>
+          <div id="prevEducation" class="resume-entries"></div>
+        </section>
+
+        <section class="resume-section" id="secSkills" hidden>
+          <h3>Skills</h3>
+          <div class="resume-skill-tags" id="prevSkills"></div>
+        </section>
+
+        <section class="resume-section" id="secExperience" hidden>
+          <h3>Experience</h3>
+          <div id="prevExperience" class="resume-entries"></div>
+        </section>
+
+        <section class="resume-section" id="secProjects" hidden>
+          <h3>Projects</h3>
+          <div id="prevProjects" class="resume-entries"></div>
+        </section>
+
+        <section class="resume-section" id="secCertifications" hidden>
+          <h3>Certifications</h3>
+          <div id="prevCertifications" class="resume-entries"></div>
+        </section>
+      </div>
+    </div>
+    <p class="stage-caption">Live preview — updates as you type, saved automatically</p>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
